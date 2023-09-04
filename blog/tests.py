@@ -11,13 +11,13 @@ class BlogTest(TestCase):
             password = 'testpassword'
         )
 
-        self.post = Post.objects.create(
+        self.post: Post = Post.objects.create(
             title='Test blog Title', 
             author = self.user,
             body = 'Test Body Title')
     
     def test_post_model_repr(self):
-        post = Post.objects.get(id = self.post.pk)
+        post = Post.objects.get(id = self.post.id)
         self.assertEqual(post.title, 'Test blog Title')
 
     def test_home_page_access(self):
@@ -42,11 +42,11 @@ class BlogTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_post_detail_page_reverse_lookup(self):
-        response = self.client.get(reverse('post_detail', kwargs={'pk': self.post.pk}))
+        response = self.client.get(reverse('post_detail', args=[str(self.post.id)]))
         self.assertEqual(response.status_code, 200)
 
     def test_post_detail_page_template(self):
-        response = self.client.get(reverse('post_detail', kwargs={'pk': self.post.pk}))
+        response = self.client.get(reverse('post_detail', args=[str(self.post.id)]))
         self.assertTemplateUsed(response, 'post_detail.html')
 
     def test_post_detail_page_content(self):
